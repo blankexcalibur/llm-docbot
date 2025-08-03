@@ -1,0 +1,17 @@
+# Python-specific
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Application-specific data and generated files
+data/
+*.db
