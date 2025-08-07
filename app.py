@@ -11,6 +11,7 @@ from typing import List, Dict, Any
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request, BackgroundTasks, Depends, status
 from pydantic import BaseModel, Field, HttpUrl
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.concurrency import run_in_threadpool
 
 # --- Project Path Setup ---
 # Dynamically add the project root and config directory to the Python path.
@@ -115,8 +116,7 @@ async def upload_document(
         logger.info(f"File saved to: {file_path}")
 
         # Process the document by loading, chunking, and indexing its content.
-        document_embedder_instance.process_and_add_document(file_path)
-
+        await run_in_threadpool(document_embedder_instance.process_and_add_document, file_path)
         return {"message": f"Document '{file.filename}' processed and indexed successfully."}
     except Exception as e:
         logger.error(f"Error processing document {file.filename}: {e}", exc_info=True)
